@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 
+const chalk = require('chalk');
 const path = require('path');
 const child_process = require('child_process');
 const { promises } = require('fs');
-const command = process.argv[2];
 const projectPath = path.join(process.cwd());
+const extensionConfig = require('./lib/extensionConfig');
+const { version } = require('./package.json');
+const prefix = chalk.gray.dim('[extension-scripts]');
 
 /** Utility to do spawn but as a Promise */
 const spawn = (command, args, options) => {
     return new Promise((resolve, reject) => {
+        if (!extensionConfig.silent) {
+            console.log(chalk.gray(`\n${prefix} > ${command} ${args.join(' ')}`));
+        }
         const child = child_process.spawn(command, args, {
             cwd: projectPath,
             stdio: 'inherit',
@@ -19,6 +25,7 @@ const spawn = (command, args, options) => {
                 resolve();
             }
         });
+        child.on('error', reject);
     });
 };
 
@@ -33,30 +40,47 @@ const pathExists = async (path) => {
 };
 
 /** Clean everything */
-const clean = () => spawn('rimraf', ['dist/*', 'lib/*']);
+const clean = () => spawn('rimraf', [
+    'dist/*',
+    'lib/*',
+    ...extensionConfig.clean
+]);
 
 /** Build the project using Rollup */
 const build = (...args) => {
     const rollupConfig = path.join(__dirname, 'lib/rollup.config.js');
-    return spawn('rollup', ['-c', rollupConfig, ...args]);
+    return spawn('rollup', [
+        '-c', rollupConfig,
+        ...args,
+        ...extensionConfig.silent ? ['--silent'] : [],
+    ]);
 };
 
-/** Run the types */
-const types = async () => {
-    const tsconfig = path.join(process.cwd(), 'tsconfig.json');
+const tsc = async (...args) => {
+    const tsconfig = path.join(process.cwd(), extensionConfig.tsconfig);
     if (await pathExists(tsconfig)) {
-        return spawn('tsc', ['-p', tsconfig, '-noEmit']);
+        return spawn('tsc', ['-p', tsconfig, ...args]);
     }
     return spawn('tsc', [
-        'src/index.ts',
+        extensionConfig.source,
         '--target', 'ES2020',
         '--moduleResolution', 'node',
         '--esModuleInterop',
         '--noImplicitAny',
         '--strict',
-        '-noEmit'
+        ...args,
     ]);
 };
+
+/** Export the types */
+const buildTypes = () => tsc(
+    '--outDir', path.join(process.cwd(), 'lib'),
+    '--declaration',
+    '--emitDeclarationOnly'
+);
+
+/** Run the types */
+const types = async () => tsc('-noEmit');
 
 /** Run the eslint */
 const lint = async (...args) => {
@@ -64,8 +88,7 @@ const lint = async (...args) => {
     return spawn('eslint', [
         '-c', eslintConfig,
         'src', 
-        ...(await pathExists(path.join(process.cwd(), 'test')) ? ['test'] : []),
-        ...(await pathExists(path.join(process.cwd(), 'examples')) ? ['examples'] : []),
+        ...extensionConfig.lint,
         '--ext', '.ts',
         '--ext', '.js',
         ...args,
@@ -75,7 +98,7 @@ const lint = async (...args) => {
 /** Deploy everything to gh-pages */
 const deploy = () => spawn('gh-pages', [
     '-d', '.',
-    '-s', '{dist,examples,docs}/**',
+    '-s', extensionConfig.deploy,
     '-f',
 ]);
 
@@ -87,44 +110,83 @@ const docs = () => spawn('webdoc', [
 
 /** Open the exmaples folder */
 const examples = async () => {
-    if (!await pathExists(path.join(process.cwd(), 'examples'))) {
-        console.log('Error: No "examples" folder found, stopping.\n');
+    if (!await pathExists(path.join(process.cwd(), extensionConfig.examples))) {
+        console.error(chalk.red(`${prefix} Error: No "${extensionConfig.examples}" folder found, stopping.\n`));
         process.exit(1);
     }
-    return spawn('http-server', ['.', '-a', 'localhost', '-o', 'examples']);
+    return spawn('http-server', [
+        '.',
+        '-a', 'localhost',
+        '-o', extensionConfig.examples,
+    ]);
 };
 
-const main = async () => {
+/** Supported commands */
+const Command = {
+    Watch: 'watch',
+    Clean: 'clean',
+    Lint: 'lint',
+    Types: 'types',
+    Build: 'build',
+    Deploy: 'deploy',
+    Serve: 'serve',
+    Release: 'release',
+    Version: 'version',
+    Docs: 'docs',
+};
+
+/** Run one of the commands above */
+const runCommand = async (command) => {
     switch(command) {
-        case 'watch':
+        case Command.Version: {
+            console.log(`v${version}`);
+            break;
+        }
+        case Command.Watch: {
             await build('-w');
             break;
-        case 'clean':
+        }
+        case Command.Clean: {
             await clean();
             break;
-        case 'lint':
+        }
+        case Command.Lint: {
             await lint('--fix');
             break;
-        case 'types':
+        }
+        case Command.Types: {
             await types();
             break;
-        case 'build':
+        }
+        case Command.Build: {
             await clean();
             await types();
             await lint();
             await build();
+            await buildTypes();
             break;
-        case 'deploy':
+        }
+        case Command.Deploy: {
             await docs();
             await deploy();
             break;
-        case 'examples':
+        }
+        case Command.Serve: {
             examples().then(() => build('-w'));
             break;
-        default:
-            console.log('Unknown command');
+        }
+        case Command.Release:
+        case Command.Docs: {
+            // TODO: Implement release
+            console.warn(chalk.yellow(`${prefix} Warning: Command "${command}" is not yet implemented.\n`));
+            break;
+        }
+        default: {
+            console.error(chalk.red(`${prefix} Error: Unknown command "${command}". `
+            + `Only the following comands are supported: "${Object.values(Command).join('", "')}"\n`));
             process.exit(1);
+        }
     }
 };
 
-main();
+runCommand(process.argv[2]);
