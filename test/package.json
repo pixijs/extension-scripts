@@ -27,8 +27,5 @@
   },
   "devDependencies": {
     "@pixi/extension-scripts": "file:../"
-  },
-  "dependencies": {
-    "chalk": "^5.2.0"
   }
 }
