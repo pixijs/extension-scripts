@@ -27,7 +27,7 @@ Simply add these things to your **package.json**. All commands are optional.
 
 ## Configuration
 
-Configuration can be provided using the `extensionConfig` field:
+Configuration can be provided using the `extensionConfig` field in **package.json**:
 
 ```json
 {
@@ -41,13 +41,13 @@ Configuration can be provided using the `extensionConfig` field:
 }
 ```
 
-* `extensionConfig.namespace` _string_, _required_ - User-defined global namespace for the bundle.
-* `extensionConfig.globals` _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
-* `extensionConfig.bundle` _string_ - The relative path to the output browser file.
-* `extensionConfig.clean` _string[]_ - List of files to clean.
-* `extensionConfig.source` _string_ - The entry-point for building the extension (default: `src/index.ts`)
-* `extensionConfig.lint` _string[]_ - List of additional folders or files to lint.
-* `extensionConfig.deploy` _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
-* `extensionConfig.examples` _string_ - Relative path to the examples (default: `examples`).
-* `extensionConfig.tsconfig` _string_ - Relative path to the tsconfig file for doing type check (default: `tsconfig.json`)
-* `extensionConfig.silent` _boolean_ - Whether to silence the output (default: `false`)
+* **`namespace`** _string_, _required_ - User-defined global namespace for the bundle.
+* **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
+* **`bundle`** _string_ - The relative path to the output browser file.
+* **`clean`** _string[]_ - List of files to clean before each build.
+* **`source`** _string_ - The entry-point for building the extension (default: `src/index.ts`)
+* **`lint`** _string[]_ - List of additional folders or files to lint.
+* **`deploy`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
+* **`examples`** _string_ - Relative path to the examples folder (default: `examples`).
+* **`tsconfig`** _string_ - Relative path to the tsconfig file for doing type check (default: `tsconfig.json`)
+* **`silent`** _boolean_ - Whether to silence the output (default: `false`)
