@@ -4,3 +4,5 @@ test/dist
 test/package-lock.json
 test/node_modules
 test/lib
+test/example*
+test/docs

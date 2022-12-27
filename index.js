@@ -6,7 +6,7 @@ const child_process = require('child_process');
 const { promises } = require('fs');
 const projectPath = path.join(process.cwd());
 const extensionConfig = require('./lib/extensionConfig');
-const { version } = require('./package.json');
+const { version, name, description, repository, keywords = [] } = require('./package.json');
 const prefix = chalk.gray.dim('[extension-scripts]');
 
 /** Utility to do spawn but as a Promise */
@@ -39,12 +39,8 @@ const pathExists = async (path) => {
     }
 };
 
-/** Clean everything */
-const clean = () => spawn('rimraf', [
-    'dist/*',
-    'lib/*',
-    ...extensionConfig.clean
-]);
+/** Convert a string with a map */
+const template = (str, map) => str.replace(/\${([^}]+)}/g, (_, key) => map[key]);
 
 /** Build the project using Rollup */
 const build = (...args) => {
@@ -79,9 +75,6 @@ const buildTypes = () => tsc(
     '--emitDeclarationOnly'
 );
 
-/** Run the types */
-const types = async () => tsc('-noEmit');
-
 /** Run the eslint */
 const lint = async (...args) => {
     const eslintConfig = path.join(__dirname, 'lib/eslint.config.json');
@@ -102,23 +95,47 @@ const deploy = () => spawn('gh-pages', [
     '-f',
 ]);
 
-/** Crate the documentation */
-const docs = () => spawn('webdoc', [
-    '-c', 'config/webdoc.json', 
-    '-r',  'README.md',
-]);
-
 /** Open the exmaples folder */
-const examples = async () => {
-    if (!await pathExists(path.join(process.cwd(), extensionConfig.examples))) {
-        console.error(chalk.red(`${prefix} Error: No "${extensionConfig.examples}" folder found, stopping.\n`));
+const serve = async () => {
+    if (!await pathExists(path.join(process.cwd(), extensionConfig.serve))) {
+        console.error(chalk.red(`${prefix} Error: No "${extensionConfig.serve}" folder found, stopping.\n`));
         process.exit(1);
     }
     return spawn('http-server', [
         '.',
         '-a', 'localhost',
-        '-o', extensionConfig.examples,
+        '-o', extensionConfig.serve,
     ]);
+};
+
+/** Create the documentation */
+const docs = async () => {
+    const templateConfig = path.join(__dirname, 'lib/webdoc.config.json');
+    const webdocConfig = path.join(process.cwd(), '.webdoc.json');
+    const contents = await promises.readFile(templateConfig, 'utf8');
+    const { 
+        docsIndex,
+        docsDestination,
+        docsRepository,
+        docsName,
+        docsCopyright,
+        docsTitle,
+        docsDescription,
+        docsKeywords } = extensionConfig;
+    await promises.writeFile(webdocConfig, template(contents, {
+        docsDestination,
+        docsRepository,
+        docsName,
+        docsCopyright,
+        docsTitle,
+        docsDescription,
+        docsKeywords,
+    }), 'utf8');
+    await spawn('webdoc', [
+        '-c', webdocConfig,
+        '-r', docsIndex,
+    ]);
+    await promises.unlink(webdocConfig);
 };
 
 /** Supported commands */
@@ -147,7 +164,11 @@ const runCommand = async (command) => {
             break;
         }
         case Command.Clean: {
-            await clean();
+            await spawn('rimraf', [
+                'dist/*',
+                'lib/*',
+                ...extensionConfig.clean
+            ]);
             break;
         }
         case Command.Lint: {
@@ -155,28 +176,33 @@ const runCommand = async (command) => {
             break;
         }
         case Command.Types: {
-            await types();
+            await tsc('-noEmit');
             break;
         }
         case Command.Build: {
-            await clean();
-            await types();
+            await runCommand(Command.Clean);
+            await runCommand(Command.Types);
             await lint();
             await build();
             await buildTypes();
             break;
         }
         case Command.Deploy: {
-            await docs();
+            await runCommand(Command.Build);
+            await runCommand(Command.Docs);
             await deploy();
             break;
         }
         case Command.Serve: {
-            examples().then(() => build('-w'));
+            serve().then(() => build('-w'));
             break;
         }
-        case Command.Release:
         case Command.Docs: {
+            await spawn('rimraf', ['docs/*']);
+            await docs();
+            break;
+        }
+        case Command.Release: {
             // TODO: Implement release
             console.warn(chalk.yellow(`${prefix} Warning: Command "${command}" is not yet implemented.\n`));
             break;

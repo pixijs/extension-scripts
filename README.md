@@ -48,6 +48,13 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`source`** _string_ - The entry-point for building the extension (default: `src/index.ts`)
 * **`lint`** _string[]_ - List of additional folders or files to lint.
 * **`deploy`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
-* **`examples`** _string_ - Relative path to the examples folder (default: `examples`).
+* **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
 * **`tsconfig`** _string_ - Relative path to the tsconfig file for doing type check (default: `tsconfig.json`)
 * **`silent`** _boolean_ - Whether to silence the output (default: `false`)
+* **`docsDestination`** _string_ - Relative path to the output documentation folder (default: `docs`)
+* **`docsRepository`** _string_ - URL for repository (defaults: package.json's `repository.url`)
+* **`docsName`** _string_ - Application name in docs  (defaults: package.json's `name`)
+* **`docsCopyright`** _string_ - Copyright in the docs (defaults: package.json's `author`)
+* **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
+* **`docsDescription`** _string_ - HTML meta description in docs (defaults: package.json's `description`)
+* **`docsKeywords`** _string_ - HTML meta keywords in docs (defaults: package.json's `keywords`)
