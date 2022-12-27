@@ -1,0 +1,44 @@
+{
+    "tags": {
+      "allowUnknownTags": false
+    },
+    "source": {
+      "include": [
+        "src/**/*.ts"
+      ]
+    },
+    "plugins": [
+      "plugins/markdown"
+    ],
+    "template": {
+      "readme": "./README.md",
+      "repository": "{repository}"
+    },
+    "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false,
+      "default": {
+        "outputSourceFiles": false
+      },
+      "applicationName": "{docsName}",
+      "copyright": "{docsCopyright}",
+      "linenums": false,
+      "meta": {
+        "title": "{docsTitle}",
+        "description": "{docsDescription}",
+        "keyword": "{docsKeywords}"
+      }
+    },
+    "markdown": {
+      "parser": "gfm",
+      "hardwrap": false
+    },
+    "opts": {
+      "encoding": "utf8",
+      "recurse": true,
+      "private": false,
+      "lenient": true,
+      "destination": "{docsDestination}",
+      "template": "@pixi/webdoc-template"
+    }
+  }

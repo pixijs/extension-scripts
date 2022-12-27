@@ -1,0 +1,35 @@
+{
+  "name": "@pixi/extension-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for building and publishing PixiJS extensions",
+  "bin": {
+    "extension-scripts": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixijs/extension-scripts.git"
+  },
+  "keywords": [],
+  "author": "Matt Karl <matt@mattkarl.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pixijs/extension-scripts/issues"
+  },
+  "homepage": "https://github.com/pixijs/extension-scripts#readme",
+  "dependencies": {
+    "@pixi/eslint-config": "^4.0.1",
+    "@pixi/webdoc-template": "^1.5.5",
+    "@webdoc/cli": "^2.2.0",
+    "eslint": "^8.30.0",
+    "gh-pages": "^4.0.0",
+    "http-server": "^14.1.1",
+    "rollup": "^3.8.1",
+    "rollup-plugin-esbuild": "^5.0.0"
+  }
+}

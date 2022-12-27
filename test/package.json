@@ -1,0 +1,38 @@
+{
+    "name": "@pixi/extension-scripts-test",
+    "private": true,
+    "main": "lib/index.js",
+    "module": "lib/index.mjs",
+    "types": "lib/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./lib/index.mjs",
+            "require": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        }
+    },
+    "scripts": {
+        "watch": "extension-scripts watch",
+        "build": "extension-scripts build",
+        "lint": "extension-scripts lint",
+        "docs": "extension-scripts docs",
+        "types": "extension-scripts types",
+        "examples": "extension-scripts examples",
+        "deploy": "extension-scripts deploy",
+        "release": "extension-scripts release",
+        "test": "run-s lint types build docs"
+    },
+    "extensionConfig": {
+        "namespace": "PIXI.custom"
+    },
+    "peerDependencies": {
+        "@pixi/core": "^7.0.0"
+    },
+    "devDependencies": {
+        "@pixi/extension-scripts": "file:../",
+        "npm-run-all": "^4.1.5"
+    },
+    "dependencies": {
+        "rimraf": "^3.0.2"
+    }
+}
