@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+const inquirer = require('inquirer');
 const chalk = require('chalk');
 const path = require('path');
 const child_process = require('child_process');
 const { promises } = require('fs');
 const projectPath = path.join(process.cwd());
 const extensionConfig = require('./lib/extensionConfig');
-const { version, name, description, repository, keywords = [] } = require('./package.json');
+const { version } = require('./package.json');
 const prefix = chalk.gray.dim('[extension-scripts]');
 
 /** Utility to do spawn but as a Promise */
@@ -203,8 +204,17 @@ const runCommand = async (command) => {
             break;
         }
         case Command.Release: {
-            // TODO: Implement release
-            console.warn(chalk.yellow(`${prefix} Warning: Command "${command}" is not yet implemented.\n`));
+            const { version } = require(path.join(process.cwd(), 'package.json'));
+            const { bump } = await inquirer.prompt([{
+                name: "bump",
+                type: "list",
+                message: `Release version (currently v${version}):`,
+                choices: ["major", "minor", "patch"],
+            }]);
+            await spawn('npm', ['version', bump]);
+            await runCommand(Command.Deploy);
+            await spawn('git', ['push']);
+            await spawn('git', ['push', '--tags']);
             break;
         }
         default: {
