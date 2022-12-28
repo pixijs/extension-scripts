@@ -205,13 +205,18 @@ const runCommand = async (command) => {
         }
         case Command.Release: {
             const { version } = require(path.join(process.cwd(), 'package.json'));
-            const { bump } = await inquirer.prompt([{
+            const { bump, custom } = await inquirer.prompt([{
                 name: "bump",
                 type: "list",
                 message: `Release version (currently v${version}):`,
-                choices: ["major", "minor", "patch"],
+                choices: ["major", "minor", "patch", "custom"],
+            }, {
+                name: "custom",
+                type: "input",
+                message: "What version?",
+                when: (answers) => answers.bump === 'custom',
             }]);
-            await spawn('npm', ['version', bump]);
+            await spawn('npm', ['version', bump === 'custom' ? custom : bump]);
             await runCommand(Command.Deploy);
             await spawn('git', ['push']);
             await spawn('git', ['push', '--tags']);
