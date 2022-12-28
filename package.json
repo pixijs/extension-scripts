@@ -6,7 +6,7 @@
     "extension-scripts": "index.js"
   },
   "scripts": {
-    "test": "npm run lint && cd test && npm test",
+    "test": "npm run lint && cd test && npm i && npm test",
     "lint": "eslint -c lib/eslint.config.json index.js lib"
   },
   "publishConfig": {
