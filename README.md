@@ -29,7 +29,7 @@ Simply add these things to your **package.json**. All commands are optional.
 
 Configuration can be provided using the `extensionConfig` field in **package.json**:
 
-* **`namespace`** _string_, _required_ - User-defined global namespace for the bundle.
+* **`namespace`** _string_ - User-defined global namespace for the bundle.
 * **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
 * **`bundle`** _string_ - The relative path to the output browser file.
 * **`clean`** _string[]_ - List of files to clean before each build.
