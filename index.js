@@ -3,39 +3,50 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const path = require('path');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 const { promises } = require('fs');
 const projectPath = path.join(process.cwd());
 const extensionConfig = require('./lib/extensionConfig');
 const { version } = require('./package.json');
 const prefix = chalk.gray.dim('[extension-scripts]');
+const pkg = require(path.join(process.cwd(), 'package.json'));
 
 /** Utility to do spawn but as a Promise */
-const spawn = (command, args, options) => {
-    return new Promise((resolve, reject) => {
-        if (!extensionConfig.silent) {
+const spawn = (command, args, options) =>
+    new Promise((resolve, reject) =>
+    {
+        if (!extensionConfig.silent)
+        {
+            // eslint-disable-next-line no-console
             console.log(chalk.gray(`\n${prefix} > ${command} ${args.join(' ')}`));
         }
-        const child = child_process.spawn(command, args, {
+        const child = childProcess.spawn(command, args, {
             cwd: projectPath,
             stdio: 'inherit',
             ...options,
         });
-        child.on('close', code => {
-            if (code === 0) {
+
+        child.on('close', (code) =>
+        {
+            if (code === 0)
+            {
                 resolve();
             }
         });
         child.on('error', reject);
     });
-};
 
 /** Utility to check if a path exists */
-const pathExists = async (path) => {
-    try {
+const pathExists = async (path) =>
+{
+    try
+    {
         await promises.access(path);
+
         return true;
-    } catch (e) {
+    }
+    catch (e)
+    {
         return false;
     }
 };
@@ -44,8 +55,10 @@ const pathExists = async (path) => {
 const template = (str, map) => str.replace(/\${([^}]+)}/g, (_, key) => map[key]);
 
 /** Build the project using Rollup */
-const build = (...args) => {
+const build = (...args) =>
+{
     const rollupConfig = path.join(__dirname, 'lib/rollup.config.js');
+
     return spawn('rollup', [
         '-c', rollupConfig,
         ...args,
@@ -53,11 +66,15 @@ const build = (...args) => {
     ]);
 };
 
-const tsc = async (...args) => {
+const tsc = async (...args) =>
+{
     const tsconfig = path.join(process.cwd(), extensionConfig.tsconfig);
-    if (await pathExists(tsconfig)) {
+
+    if (await pathExists(tsconfig))
+    {
         return spawn('tsc', ['-p', tsconfig, ...args]);
     }
+
     return spawn('tsc', [
         extensionConfig.source,
         '--target', 'ES2020',
@@ -77,11 +94,13 @@ const buildTypes = () => tsc(
 );
 
 /** Run the eslint */
-const lint = async (...args) => {
+const lint = async (...args) =>
+{
     const eslintConfig = path.join(__dirname, 'lib/eslint.config.json');
+
     return spawn('eslint', [
         '-c', eslintConfig,
-        'src', 
+        'src',
         ...extensionConfig.lint,
         '--ext', '.ts',
         '--ext', '.js',
@@ -97,11 +116,14 @@ const deploy = () => spawn('gh-pages', [
 ]);
 
 /** Open the exmaples folder */
-const serve = async () => {
-    if (!await pathExists(path.join(process.cwd(), extensionConfig.serve))) {
+const serve = async () =>
+{
+    if (!await pathExists(path.join(process.cwd(), extensionConfig.serve)))
+    {
         console.error(chalk.red(`${prefix} Error: No "${extensionConfig.serve}" folder found, stopping.\n`));
         process.exit(1);
     }
+
     return spawn('http-server', [
         '.',
         '-a', 'localhost',
@@ -110,11 +132,12 @@ const serve = async () => {
 };
 
 /** Create the documentation */
-const docs = async () => {
+const docs = async () =>
+{
     const templateConfig = path.join(__dirname, 'lib/webdoc.config.json');
     const webdocConfig = path.join(process.cwd(), '.webdoc.json');
     const contents = await promises.readFile(templateConfig, 'utf8');
-    const { 
+    const {
         docsIndex,
         docsDestination,
         docsRepository,
@@ -123,6 +146,7 @@ const docs = async () => {
         docsTitle,
         docsDescription,
         docsKeywords } = extensionConfig;
+
     await promises.writeFile(webdocConfig, template(contents, {
         docsDestination,
         docsRepository,
@@ -154,9 +178,12 @@ const Command = {
 };
 
 /** Run one of the commands above */
-const runCommand = async (command) => {
-    switch(command) {
+const runCommand = async (command) =>
+{
+    switch (command)
+    {
         case Command.Version: {
+            // eslint-disable-next-line no-console
             console.log(`v${version}`);
             break;
         }
@@ -204,18 +231,18 @@ const runCommand = async (command) => {
             break;
         }
         case Command.Release: {
-            const { version } = require(path.join(process.cwd(), 'package.json'));
             const { bump, custom } = await inquirer.prompt([{
-                name: "bump",
-                type: "list",
-                message: `Release version (currently v${version}):`,
-                choices: ["major", "minor", "patch", "custom"],
+                name: 'bump',
+                type: 'list',
+                message: `Release version (currently v${pkg.version}):`,
+                choices: ['major', 'minor', 'patch', 'custom'],
             }, {
-                name: "custom",
-                type: "input",
-                message: "What version?",
+                name: 'custom',
+                type: 'input',
+                message: 'What version?',
                 when: (answers) => answers.bump === 'custom',
             }]);
+
             await spawn('npm', ['version', bump === 'custom' ? custom : bump]);
             await runCommand(Command.Deploy);
             await spawn('git', ['push']);
@@ -223,6 +250,7 @@ const runCommand = async (command) => {
             break;
         }
         default: {
+            // eslint-disable-next-line no-console
             console.error(chalk.red(`${prefix} Error: Unknown command "${command}". `
             + `Only the following comands are supported: "${Object.values(Command).join('", "')}"\n`));
             process.exit(1);
