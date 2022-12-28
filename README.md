@@ -1,6 +1,6 @@
 # PixiJS Extension Scripts
 
-Contains all the tools common for building extensions.
+Contains all the tools common for building extensions for PixiJS. While this tool is rather generic and can be used for variety of purposes, it has convenient defaults that are specifically designed for PixiJS v7+.
 
 ## Getting Started
 
@@ -29,18 +29,6 @@ Simply add these things to your **package.json**. All commands are optional.
 
 Configuration can be provided using the `extensionConfig` field in **package.json**:
 
-```json
-{
-  "extensionConfig": {
-    "namespace": "PIXI.myextension",
-    "bundle": "dist/pixi-my-extension.js",
-    "globals": {
-        "lodash": "_"
-    }
-  }
-}
-```
-
 * **`namespace`** _string_, _required_ - User-defined global namespace for the bundle.
 * **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
 * **`bundle`** _string_ - The relative path to the output browser file.
@@ -58,3 +46,17 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
 * **`docsDescription`** _string_ - HTML meta description in docs (defaults: package.json's `description`)
 * **`docsKeywords`** _string_ - HTML meta keywords in docs (defaults: package.json's `keywords`)
+
+### Example
+
+```json
+{
+  "extensionConfig": {
+    "namespace": "PIXI.myextension",
+    "bundle": "dist/pixi-my-extension.js",
+    "globals": {
+        "lodash": "_"
+    }
+  }
+}
+```
