@@ -69,7 +69,8 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`clean`** _string[]_ - List of files to clean before each build.
 * **`source`** _string_ - The entry-point for building the extension (default: `src/index.ts`)
 * **`lint`** _string[]_ - List of additional folders or files to lint.
-* **`deploy`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
+* **`deployFiles`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
+* **`deployBranch`** _string[]_ - Branch where to do the deployment (default: `gh-pages`).
 * **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
 * **`tsconfig`** _string_ - Relative path to the tsconfig file for doing type check (default: `tsconfig.json`)
 * **`silent`** _boolean_ - Whether to silence the output (default: `false`)
