@@ -1,7 +1,7 @@
 {
   "name": "@pixi/extension-scripts",
-  "version": "0.1.0",
-  "type":"module",
+  "version": "1.0.0",
+  "type": "module",
   "description": "Scripts for building and publishing PixiJS extensions",
   "bin": {
     "extension-scripts": "lib/index.mjs"
