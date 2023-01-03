@@ -4,10 +4,20 @@ Contains all the tools common for building extensions for PixiJS. While this too
 
 ## Getting Started
 
-Simply add these things to your **package.json**. All commands are optional.
+Simply add these things to your **package.json**. All scripts (a.k.a., commands) are optional. This structure (`main`, `types`, `module`, `exports`) provides the best backward-compatibility with Node's new module [exports](https://nodejs.org/api/packages.html#exports).
 
 ```json
 {
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
   "scripts": {
     "clean": "extension-scripts clean",
     "watch": "extension-scripts watch",
@@ -39,6 +49,15 @@ Simply add these things to your **package.json**. All commands are optional.
 | `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
 | `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
 
+### Project Structure
+
+Generally, the project structure is baked-in to the defaults, however, most of this can be customized (see the Configuration section below).
+
+* `./src` - Contains all the source code (TypeScript files)
+* `./lib` - Generated folder for ES2020 modules and types
+* `./dist` - Generated folder for the ES2017 browser bundles
+* `./docs` - Generated folder for the API documentation
+* `./examples` - Contains any examples or demos use to test the project
 
 ## Configuration
 
