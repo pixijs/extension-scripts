@@ -24,6 +24,7 @@ const build = (...args) =>
     ]);
 };
 
+/** Wrapper for using typescript's CLI */
 const tsc = async (...args) =>
 {
     const tsconfig = path.join(process.cwd(), extensionConfig.tsconfig);
@@ -51,7 +52,7 @@ const buildTypes = () => tsc(
     '--emitDeclarationOnly'
 );
 
-/** Run the eslint */
+/** Run ESlint with built-in config */
 const lint = async (...args) =>
 {
     const eslintConfig = path.join(__dirname, 'lib/eslint.config.json');
