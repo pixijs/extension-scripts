@@ -1,13 +1,14 @@
 {
   "name": "@pixi/extension-scripts",
   "version": "1.0.0",
+  "type":"module",
   "description": "Scripts for building and publishing PixiJS extensions",
   "bin": {
-    "extension-scripts": "lib/index.js"
+    "extension-scripts": "lib/index.mjs"
   },
   "scripts": {
     "test": "npm run lint && cd test && npm i && npm test",
-    "lint": "eslint -c lib/configs/eslint.json lib"
+    "lint": "eslint --ext .mjs -c lib/configs/eslint.json lib"
   },
   "publishConfig": {
     "access": "public"
