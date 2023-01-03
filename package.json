@@ -32,6 +32,8 @@
   "dependencies": {
     "@pixi/eslint-config": "^4.0.1",
     "@pixi/webdoc-template": "^1.5.5",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "@webdoc/cli": "^2.2.0",
     "chalk": "^5.0.0",
     "eslint": "^8.30.0",
