@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Scripts for building and publishing PixiJS extensions",
   "bin": {
-    "extension-scripts": "index.js"
+    "extension-scripts": "lib/index.js"
   },
   "scripts": {
     "test": "npm run lint && cd test && npm i && npm test",
-    "lint": "eslint -c lib/eslint.config.json index.js lib"
+    "lint": "eslint -c lib/configs/eslint.json lib"
   },
   "publishConfig": {
     "access": "public"
