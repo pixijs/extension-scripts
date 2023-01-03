@@ -8,7 +8,9 @@
   },
   "scripts": {
     "test": "npm run lint && cd test && npm i && npm test",
-    "lint": "eslint --ext .mjs -c lib/configs/eslint.json lib"
+    "lint": "eslint --ext .mjs -c lib/configs/eslint.json lib",
+    "preversion": "npm test",
+    "postversion": "npm publish && git push && git push --tags"
   },
   "publishConfig": {
     "access": "public"
