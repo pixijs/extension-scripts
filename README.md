@@ -25,6 +25,21 @@ Simply add these things to your **package.json**. All commands are optional.
 }
 ```
 
+### Commands
+
+| Command | Description |
+|---|---|
+| `clean` | Removes the `dist` and `lib` folders |
+| `watch` | Watch the code in development mode, updates on changes |
+| `build` | Build `dist` and `lib` targets in release mode as well as the types. |
+| `lint` | Using ESLint to lint the `src` folder, this runs with `--fix` enabled. |
+| `docs` | Build the `src` folder into `docs` folder using webdoc |
+| `types` | Type-check the `src` folder using TypeScript |
+| `serve` | Runs `watch` command plus also opens the `examples` folder |
+| `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
+| `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
+
+
 ## Configuration
 
 Configuration can be provided using the `extensionConfig` field in **package.json**:
