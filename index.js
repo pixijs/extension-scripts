@@ -245,6 +245,7 @@ const runCommand = async (command) =>
 
             await spawn('npm', ['version', bump === 'custom' ? custom : bump]);
             await runCommand(Command.Deploy);
+            await spawn('npm', ['publish']);
             await spawn('git', ['push']);
             await spawn('git', ['push', '--tags']);
             break;
