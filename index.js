@@ -11,6 +11,7 @@ const { spawn } = require('./lib/utils/spawn');
 const { pathExists } = require('./lib/utils/pathExists');
 const { template } = require('./lib/utils/template');
 const { prefix } = require('./lib/utils/prefix');
+const rimraf = require('rimraf');
 
 /** Build the project using Rollup */
 const build = (...args) =>
@@ -50,6 +51,24 @@ const buildTypes = () => tsc(
     '--outDir', path.join(process.cwd(), 'lib'),
     '--declaration',
     '--emitDeclarationOnly'
+);
+
+/** Promisify rimraf */
+const clean = async (glob) => (
+    new Promise((resolve, reject) =>
+    {
+        if (!extensionConfig.silent)
+        {
+            // eslint-disable-next-line no-console
+            console.log(chalk.gray(`\n${prefix} > rimraf ${glob}`));
+        }
+
+        rimraf(path.join(process.cwd(), glob), (err) =>
+        {
+            if (err) reject(err);
+            else resolve();
+        });
+    })
 );
 
 /** Run ESlint with built-in config */
@@ -151,11 +170,11 @@ const runCommand = async (command) =>
             break;
         }
         case Command.Clean: {
-            await spawn('rimraf', [
-                'dist/*',
-                'lib/*',
-                ...extensionConfig.clean
-            ]);
+            await clean('{dist,lib}/*');
+            for (const glob of extensionConfig.clean)
+            {
+                await clean(glob);
+            }
             break;
         }
         case Command.Lint: {
@@ -185,7 +204,7 @@ const runCommand = async (command) =>
             break;
         }
         case Command.Docs: {
-            await spawn('rimraf', ['docs/*']);
+            await clean('docs/*');
             await docs();
             break;
         }

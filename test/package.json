@@ -13,6 +13,7 @@
     }
   },
   "scripts": {
+    "clean": "extension-scripts clean",
     "watch": "extension-scripts watch",
     "build": "extension-scripts build",
     "lint": "extension-scripts lint",
