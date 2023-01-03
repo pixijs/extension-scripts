@@ -3,56 +3,14 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const path = require('path');
-const childProcess = require('child_process');
 const { promises } = require('fs');
-const projectPath = path.join(process.cwd());
 const extensionConfig = require('./lib/extensionConfig');
 const { version } = require('./package.json');
-const prefix = chalk.gray.dim('[extension-scripts]');
 const pkg = require(path.join(process.cwd(), 'package.json'));
-
-/** Utility to do spawn but as a Promise */
-const spawn = (command, args, options) =>
-    new Promise((resolve, reject) =>
-    {
-        if (!extensionConfig.silent)
-        {
-            // eslint-disable-next-line no-console
-            console.log(chalk.gray(`\n${prefix} > ${command} ${args.join(' ')}`));
-        }
-        const child = childProcess.spawn(command, args, {
-            cwd: projectPath,
-            stdio: 'inherit',
-            ...options,
-        });
-
-        child.on('close', (code) =>
-        {
-            if (code === 0)
-            {
-                resolve();
-            }
-        });
-        child.on('error', reject);
-    });
-
-/** Utility to check if a path exists */
-const pathExists = async (path) =>
-{
-    try
-    {
-        await promises.access(path);
-
-        return true;
-    }
-    catch (e)
-    {
-        return false;
-    }
-};
-
-/** Convert a string with a map */
-const template = (str, map) => str.replace(/\${([^}]+)}/g, (_, key) => map[key]);
+const { spawn } = require('./lib/utils/spawn');
+const { pathExists } = require('./lib/utils/pathExists');
+const { template } = require('./lib/utils/template');
+const { prefix } = require('./lib/utils/prefix');
 
 /** Build the project using Rollup */
 const build = (...args) =>
