@@ -11,7 +11,7 @@
       "plugins/markdown"
     ],
     "template": {
-      "readme": "./README.md",
+      "readme": "./${docsIndex}",
       "repository": "${docsRepository}"
     },
     "templates": {
@@ -22,6 +22,7 @@
       },
       "applicationName": "${docsName}",
       "copyright": "${docsCopyright}",
+      "googleAnalytics": "${docsGoogleAnalytics}",
       "linenums": false,
       "meta": {
         "title": "${docsTitle}",
