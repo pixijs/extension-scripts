@@ -27,6 +27,7 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
     "types": "extension-scripts types",
     "serve": "extension-scripts serve",
     "deploy": "extension-scripts deploy",
+    "test": "extension-scripts test",
     "release": "extension-scripts release"
   },
   "devDependencies": {
