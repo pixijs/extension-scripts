@@ -27,6 +27,7 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
     "types": "extension-scripts types",
     "serve": "extension-scripts serve",
     "deploy": "extension-scripts deploy",
+    "test": "extension-scripts test",
     "release": "extension-scripts release"
   },
   "devDependencies": {
@@ -42,12 +43,13 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 | `clean` | Removes the `dist` and `lib` folders |
 | `watch` | Watch the code in development mode, updates on changes |
 | `build` | Build `dist` and `lib` targets in release mode as well as the types. |
-| `lint` | Using ESLint to lint the `src` folder, this runs with `--fix` enabled. |
+| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `extension-scripts lint -- --fix` |
 | `docs` | Build the `src` folder into `docs` folder using webdoc |
 | `types` | Type-check the `src` folder using TypeScript |
 | `serve` | Runs `watch` command plus also opens the `examples` folder |
 | `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
 | `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
+| `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `extension-scripts test -- --ci` |
 
 ### Project Structure
 
@@ -55,6 +57,7 @@ Generally, the project structure is baked-in to the defaults, however, most of t
 
 * `./src` - Contains all the source code (TypeScript files)
 * `./lib` - Generated folder for ES2020 modules and types
+* `./test` - The Jest unit-tests
 * `./dist` - Generated folder for the ES2017 browser bundles
 * `./docs` - Generated folder for the API documentation
 * `./examples` - Contains any examples or demos use to test the project
@@ -82,6 +85,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
 * **`docsDescription`** _string_ - HTML meta description in docs (defaults: package.json's `description`)
 * **`docsKeywords`** _string_ - HTML meta keywords in docs (defaults: package.json's `keywords`)
+* **`jestConfig`** _string_ - Optional path to the Jest config file (default: `null`)
 
 ### Example
 
@@ -95,4 +99,24 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
     }
   }
 }
+```
+
+## GitHub Actions
+
+If you're going to run `extension-scripts test` on GitHub Actions, please keep in mind that it requires `xvfb` since the tests are run within Electron. You can add the following to your workflow scripts to run it:
+
+**Before**
+
+```yml
+- name: Test
+  run: npm test
+```
+
+**After**
+
+```yml
+- name: Test
+  uses: GabrielBB/xvfb-action@v1
+  with:
+    run: npm test
 ```
