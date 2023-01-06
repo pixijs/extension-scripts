@@ -72,7 +72,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`bundleModule`** _string_ - The relative path to the output browser module (`.mjs`) file.
 * **`clean`** _string[]_ - List of files to clean before each build.
 * **`source`** _string_ - The entry-point for building the extension (default: `src/index.ts`)
-* **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src']`)
+* **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'test']`)
 * **`deployFiles`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
 * **`deployBranch`** _string[]_ - Branch where to do the deployment (default: `gh-pages`).
 * **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
