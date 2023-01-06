@@ -19,16 +19,16 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
     }
   },
   "scripts": {
-    "clean": "extension-scripts clean",
-    "watch": "extension-scripts watch",
     "build": "extension-scripts build",
-    "lint": "extension-scripts lint",
-    "docs": "extension-scripts docs",
-    "types": "extension-scripts types",
-    "serve": "extension-scripts serve",
+    "clean": "extension-scripts clean",
     "deploy": "extension-scripts deploy",
+    "docs": "extension-scripts docs",
+    "lint": "extension-scripts lint",
+    "release": "extension-scripts release",
+    "serve": "extension-scripts serve",
     "test": "extension-scripts test",
-    "release": "extension-scripts release"
+    "types": "extension-scripts types",
+    "watch": "extension-scripts watch"
   },
   "devDependencies": {
     "@pixi/extension-scripts": "latest"
@@ -40,27 +40,27 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 
 | Command | Description |
 |---|---|
-| `clean` | Removes the `dist` and `lib` folders |
-| `watch` | Watch the code in development mode, updates on changes |
 | `build` | Build `dist` and `lib` targets in release mode as well as the types. |
-| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `extension-scripts lint -- --fix` |
-| `docs` | Build the `src` folder into `docs` folder using webdoc |
-| `types` | Type-check the `src` folder using TypeScript |
-| `serve` | Runs `watch` command plus also opens the `examples` folder |
+| `clean` | Removes the `dist` and `lib` folders |
 | `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
+| `docs` | Build the `src` folder into `docs` folder using webdoc |
+| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `extension-scripts lint -- --fix` |
 | `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
+| `serve` | Runs `watch` command plus also opens the `examples` folder |
 | `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `extension-scripts test -- --ci` |
+| `types` | Type-check the `src` folder using TypeScript |
+| `watch` | Watch the code in development mode, updates on changes |
 
 ### Project Structure
 
 Generally, the project structure is baked-in to the defaults, however, most of this can be customized (see the Configuration section below).
 
-* `./src` - Contains all the source code (TypeScript files)
-* `./lib` - Generated folder for ES2020 modules and types
-* `./test` - The Jest unit-tests
 * `./dist` - Generated folder for the ES2017 browser bundles
 * `./docs` - Generated folder for the API documentation
 * `./examples` - Contains any examples or demos use to test the project
+* `./lib` - Generated folder for ES2020 modules and types
+* `./src` - Contains all the source code (TypeScript files)
+* `./test` - The Jest unit-tests
 
 ## Configuration
 
