@@ -82,6 +82,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
 * **`docsDescription`** _string_ - HTML meta description in docs (defaults: package.json's `description`)
 * **`docsKeywords`** _string_ - HTML meta keywords in docs (defaults: package.json's `keywords`)
+* **`jestConfig`** _string_ - Optional path to the Jest config file (default: `null`)
 
 ### Example
 

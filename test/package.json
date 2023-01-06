@@ -22,7 +22,8 @@
     "serve": "extension-scripts serve",
     "deploy": "extension-scripts deploy",
     "release": "extension-scripts release",
-    "test": "npm run build && npm run docs"
+    "unit-test": "extension-scripts test",
+    "test": "npm run build && npm run docs && npm run unit-test"
   },
   "peerDependencies": {
     "@pixi/core": "^7.0.0"
