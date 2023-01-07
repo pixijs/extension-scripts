@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "npm run lint && cd test && npm i && npm test",
-    "lint": "eslint --ext .mjs -c lib/configs/eslint.json lib",
+    "lint": "eslint --ext .mjs -c lib/configs/eslint.json lib --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
     "preversion": "npm test",
     "postversion": "npm publish && git push && git push --tags"
   },
