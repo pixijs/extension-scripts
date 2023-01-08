@@ -13,16 +13,16 @@
     }
   },
   "scripts": {
-    "clean": "extension-scripts clean",
-    "watch": "extension-scripts watch",
-    "build": "extension-scripts build",
-    "lint": "extension-scripts lint",
-    "docs": "extension-scripts docs",
-    "types": "extension-scripts types",
-    "serve": "extension-scripts serve",
-    "deploy": "extension-scripts deploy",
-    "release": "extension-scripts release",
-    "unit-test": "extension-scripts test",
+    "clean": "xs clean",
+    "watch": "xs watch",
+    "build": "xs build",
+    "lint": "xs lint",
+    "docs": "xs docs",
+    "types": "xs types",
+    "serve": "xs serve",
+    "deploy": "xs deploy",
+    "release": "xs release",
+    "unit-test": "xs test",
     "test": "npm run build && npm run docs && npm run unit-test"
   },
   "peerDependencies": {

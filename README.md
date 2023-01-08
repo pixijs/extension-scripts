@@ -19,16 +19,16 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
     }
   },
   "scripts": {
-    "build": "extension-scripts build",
-    "clean": "extension-scripts clean",
-    "deploy": "extension-scripts deploy",
-    "docs": "extension-scripts docs",
-    "lint": "extension-scripts lint",
-    "release": "extension-scripts release",
-    "serve": "extension-scripts serve",
-    "test": "extension-scripts test",
-    "types": "extension-scripts types",
-    "watch": "extension-scripts watch"
+    "build": "xs build",
+    "clean": "xs clean",
+    "deploy": "xs deploy",
+    "docs": "xs docs",
+    "lint": "xs lint",
+    "release": "xs release",
+    "serve": "xs serve",
+    "test": "xs test",
+    "types": "xs types",
+    "watch": "xs watch"
   },
   "devDependencies": {
     "@pixi/extension-scripts": "latest"
@@ -44,10 +44,10 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 | `clean` | Removes the `dist` and `lib` folders |
 | `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
 | `docs` | Build the `src` folder into `docs` folder using webdoc |
-| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `extension-scripts lint -- --fix` |
+| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `xs lint -- --fix` |
 | `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
 | `serve` | Runs `watch` command plus also opens the `examples` folder |
-| `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `extension-scripts test -- --ci` |
+| `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `xs test -- --ci` |
 | `types` | Type-check the `src` folder using TypeScript |
 | `watch` | Watch the code in development mode, updates on changes |
 
@@ -105,7 +105,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 
 ## GitHub Actions
 
-If you're going to run `extension-scripts test` on GitHub Actions, please keep in mind that it requires `xvfb` since the tests are run within Electron. You can add the following to your workflow scripts to run it:
+If you're going to run `xs test` on GitHub Actions, please keep in mind that it requires `xvfb` since the tests are run within Electron. You can add the following to your workflow scripts to run it:
 
 **Before**
 

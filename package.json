@@ -4,7 +4,8 @@
   "type": "module",
   "description": "Scripts for building and publishing PixiJS extensions",
   "bin": {
-    "extension-scripts": "lib/index.mjs"
+    "extension-scripts": "lib/index.mjs",
+    "xs": "lib/index.mjs"
   },
   "scripts": {
     "test": "npm run lint && cd test && npm i && npm test",
