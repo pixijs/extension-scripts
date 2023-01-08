@@ -1,6 +1,6 @@
 # PixiJS Extension Scripts
 
-[![Node.js CI](https://github.com/pixijs/extension-scripts/actions/workflows/build.yml/badge.svg)](https://github.com/pixijs/extension-scripts/actions/workflows/build.yml)
+[![Node.js CI](https://github.com/pixijs/extension-scripts/actions/workflows/build.yml/badge.svg)](https://github.com/pixijs/extension-scripts/actions/workflows/build.yml) ![npm (scoped)](https://img.shields.io/npm/v/@pixi/extension-scripts)
 
 Contains all the tools common for building extensions for PixiJS. While this tool is rather generic and can be used for variety of purposes, it has convenient defaults that are specifically designed for PixiJS v7+.
 
