@@ -2,6 +2,15 @@
 
 Contains all the tools common for building extensions for PixiJS. While this tool is rather generic and can be used for variety of purposes, it has convenient defaults that are specifically designed for PixiJS v7+.
 
+## Features
+
+* [Consistent linting style](https://github.com/pixijs/eslint-config/) with [ESLint](https://eslint.org/)
+* Builds using [Rollup](https://rollupjs.org/guide/en/) and [ESBuild](https://esbuild.github.io/)
+* Testing using [Jest](https://jestjs.io/docs/getting-started) (with [Electron runner](https://github.com/kayahr/jest-electron-runner))
+* Documentation building with [webdoc](https://github.com/webdoc-labs/webdoc)
+* Deployment using [gh-pages](https://github.com/tschaub/gh-pages) on GitHub
+* Publishing release workflow
+
 ## Getting Started
 
 Simply add these things to your **package.json**. All scripts (a.k.a., commands) are optional. This structure (`main`, `types`, `module`, `exports`) provides the best backward-compatibility with Node's new module [exports](https://nodejs.org/api/packages.html#exports).
@@ -50,6 +59,18 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 | `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `xs test -- --ci` |
 | `types` | Type-check the `src` folder using TypeScript |
 | `watch` | Watch the code in development mode, updates on changes |
+
+### Chaining
+
+Commands can also be chained together easily separated by a comma. For example, the following will serially call `test`, `build`, then finally `docs`. This can be used as a convenient shortcut for `pre*` and `post*` **package.json** scripts.
+
+```json
+{
+  "scripts": {
+    "test": "xs test,build,docs"
+  }
+}
+```
 
 ### Project Structure
 

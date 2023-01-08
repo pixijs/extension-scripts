@@ -23,7 +23,7 @@
     "deploy": "xs deploy",
     "release": "xs release",
     "unit-test": "xs test",
-    "test": "npm run build && npm run docs && npm run unit-test"
+    "test": "xs build,docs,test"
   },
   "peerDependencies": {
     "@pixi/core": "^7.0.0"
