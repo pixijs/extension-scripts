@@ -13,17 +13,15 @@
     }
   },
   "scripts": {
-    "clean": "xs clean",
-    "watch": "xs watch",
     "build": "xs build",
-    "lint": "xs lint",
+    "clean": "xs clean",
     "docs": "xs docs",
-    "types": "xs types",
+    "lint": "xs lint",
     "serve": "xs serve",
-    "deploy": "xs deploy",
-    "release": "xs release",
+    "test": "xs build,docs,test",
+    "types": "xs types",
     "unit-test": "xs test",
-    "test": "xs build,docs,test"
+    "watch": "xs watch"
   },
   "peerDependencies": {
     "@pixi/core": "^7.0.0"
