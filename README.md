@@ -32,14 +32,10 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
   },
   "scripts": {
     "build": "xs build",
-    "clean": "xs clean",
-    "deploy": "xs deploy",
     "docs": "xs docs",
-    "lint": "xs lint",
     "release": "xs release",
-    "serve": "xs serve",
+    "start": "xs serve",
     "test": "xs test",
-    "types": "xs types",
     "watch": "xs watch"
   },
   "devDependencies": {
@@ -52,21 +48,27 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 
 | Command | Description |
 |---|---|
-| `build` | Build `dist` and `lib` targets in release mode as well as the types. |
+| `build` | Alias for `clean,lint,types,bundle` |
+| `bump` | Interactive prompt to bump the version number |
+| `bundle` | Build `dist` and `lib` targets in release mode as well as the types. |
 | `clean` | Removes the `dist` and `lib` folders |
-| `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
+| `deploy` | Alias for `build,docs,upload` |
 | `docs` | Build the `src` folder into `docs` folder using webdoc |
+| `git-push` | Does `git push` and `git push --tags` |
 | `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `xs lint -- --fix` |
 | `pack` | Like `npm pack` but will use [clean-package](https://www.npmjs.com/package/clean-package) |
-| `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
+| `publish` | Just like `npm publish` but invokes `clean-package` before and after |
+| `release` | Alias for `bump,test,deploy,publish,git-push` |
 | `serve` | Runs `watch` command plus also opens the `examples` folder |
 | `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `xs test -- --ci` |
 | `types` | Type-check the `src` folder using TypeScript |
+| `upload` | Upload files to gh-pages branch |
+| `version` | Output the version of `@pixi/extension-scripts` |
 | `watch` | Watch the code in development mode, updates on changes |
 
 ### Chaining
 
-Commands can also be chained together easily separated by a comma. For example, the following will serially call `test`, `build`, then finally `docs`. This can be used as a convenient shortcut for `pre*` and `post*` **package.json** scripts.
+Commands can also be chained together easily separated by a comma. For example, the following will serially call `test`, `build`, then finally `docs`. This can be used as a convenient alternative for `pre*` and `post*` **package.json** scripts.
 
 ```json
 {
@@ -121,6 +123,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
   "extensionConfig": {
     "namespace": "PIXI.myextension",
     "bundle": "dist/pixi-my-extension.js",
+    "bundleModule": "dist/pixi-my-extension.mjs",
     "globals": {
         "lodash": "_"
     }
