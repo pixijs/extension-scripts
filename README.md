@@ -11,6 +11,7 @@ Contains all the tools common for building extensions for PixiJS. While this too
 * Testing using [Jest](https://jestjs.io/docs/getting-started) (with [Electron runner](https://github.com/kayahr/jest-electron-runner))
 * Documentation building with [webdoc](https://github.com/webdoc-labs/webdoc)
 * Deployment using [gh-pages](https://github.com/tschaub/gh-pages) on GitHub
+* Tidy package.json with [clean-package](https://www.npmjs.com/package/clean-package) while publishing.
 * Publishing release workflow
 
 ## Getting Started
@@ -56,6 +57,7 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 | `deploy` | Does `build` and `docs` and then copies the folders (`dist`, `examples`, `docs`) to `gh-pages` branch |
 | `docs` | Build the `src` folder into `docs` folder using webdoc |
 | `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `xs lint -- --fix` |
+| `pack` | Like `npm pack` but will use [clean-package](https://www.npmjs.com/package/clean-package) |
 | `release` | Publish a release, will ask for what type of version bump, do a `deploy` and push to npm and git tags. |
 | `serve` | Runs `watch` command plus also opens the `examples` folder |
 | `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `xs test -- --ci` |
