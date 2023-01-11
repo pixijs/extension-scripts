@@ -95,6 +95,8 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 
 * **`bundle`** _string_ - The relative path to the output browser file (`.js`).
 * **`bundleModule`** _string_ - The relative path to the output browser module (`.mjs`) file.
+* **`bundleModuleSource`** _string_ - Input for the `bundleModule`, fallback to `source` (default: `null`)
+* **`bundleSource`** _string_ - Input for the `bundle`, fallback to `source` (default: `null`)
 * **`clean`** _string[]_ - List of files to clean before each build.
 * **`deployFiles`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
 * **`deployBranch`** _string[]_ - Branch where to do the deployment (default: `gh-pages`).
