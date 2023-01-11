@@ -94,9 +94,11 @@ Generally, the project structure is baked-in to the defaults, however, most of t
 Configuration can be provided using the `extensionConfig` field in **package.json**:
 
 * **`bundle`** _string_ - The relative path to the output browser file (`.js`).
+* **`bundleExports`** _string_ - Output [exports](https://rollupjs.org/guide/en/#outputexports) for `bundle` (default: `named`)
+* **`bundleSource`** _string_ - Input for the `bundle`, fallback to `source` (default: `null`)
 * **`bundleModule`** _string_ - The relative path to the output browser module (`.mjs`) file.
 * **`bundleModuleSource`** _string_ - Input for the `bundleModule`, fallback to `source` (default: `null`)
-* **`bundleSource`** _string_ - Input for the `bundle`, fallback to `source` (default: `null`)
+* **`bundleModuleExports`** _string_ - Output [exports](https://rollupjs.org/guide/en/#outputexports) for `bundleModule` (default: `named`)
 * **`clean`** _string[]_ - List of files to clean before each build.
 * **`deployFiles`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
 * **`deployBranch`** _string[]_ - Branch where to do the deployment (default: `gh-pages`).
