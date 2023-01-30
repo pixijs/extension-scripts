@@ -43,6 +43,7 @@
     "@pixi/webdoc-template": "^1.5.5",
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-replace": "^5.0.2",
     "@types/http-server": "^0.12.1",
     "@types/jest": "^29.2.4",
     "@webdoc/cli": "^2.2.0",
