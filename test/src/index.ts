@@ -13,6 +13,9 @@ class MySystem implements ISystem
         type: ExtensionType.RendererSystem,
     };
 
+    /** Currention version can be inlined like this: */
+    static version = '__VERSION__';
+
     /** Required init */
     init()
     {
