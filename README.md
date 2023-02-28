@@ -111,6 +111,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`docsName`** _string_ - Application name in docs  (defaults: package.json's `name`)
 * **`docsRepository`** _string_ - URL for repository (defaults: package.json's `repository.url`)
 * **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
+* **`environments`** _string[]_ - Environments supports for output, only values supprted `node`, `browser` (default: `['node', 'browser']`)
 * **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
 * **`jestConfig`** _string_ - Optional path to the Jest config file (default: `null`)
 * **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'test', 'examples']`)
