@@ -150,8 +150,8 @@ If you're going to run `xs test` on GitHub Actions, please keep in mind that it 
 **After**
 
 ```yml
+- name: Test Dependencies
+  run: sudo apt-get install xvfb
 - name: Test
-  uses: GabrielBB/xvfb-action@v1
-  with:
-    run: npm test
+  run: xvfb-run --auto-servernum npm test
 ```
