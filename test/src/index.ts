@@ -1,4 +1,5 @@
 import { extensions, ExtensionType } from '@pixi/core';
+
 import type { ExtensionMetadata, ISystem } from '@pixi/core';
 
 /**
