@@ -24,7 +24,7 @@
     "watch": "xs watch"
   },
   "peerDependencies": {
-    "@pixi/core": "^7.0.0"
+    "@pixi/core": "^7.3.0"
   },
   "devDependencies": {
     "@pixi/extension-scripts": "file:../"
