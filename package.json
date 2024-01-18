@@ -1,6 +1,6 @@
 {
   "name": "@pixi/extension-scripts",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "type": "module",
   "description": "Scripts for building and publishing PixiJS extensions",
   "bin": {
