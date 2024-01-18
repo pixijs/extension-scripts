@@ -115,6 +115,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
 * **`jestConfig`** _string_ - Optional path to the Jest config file (default: `null`)
 * **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'test', 'examples']`)
+* **`moduleSource`** _string_ - Input for the `module` output, fallback to `source`. Supports globs. (default: `null`)
 * **`namespace`** _string_ - User-defined global namespace for the bundle.
 * **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
 * **`silent`** _boolean_ - Whether to silence the output (default: `false`)
