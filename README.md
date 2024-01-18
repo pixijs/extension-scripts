@@ -136,6 +136,10 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 }
 ```
 
+## Environment Variables
+
+* **XS_PUBLISH_TAG** _string_ - The npm [`--tag`](https://docs.npmjs.com/cli/v10/commands/npm-publish#tag) value to use when running the `publish` command (default: `latest`)
+
 ## GitHub Actions
 
 If you're going to run `xs test` on GitHub Actions, please keep in mind that it requires `xvfb` since the tests are run within Electron. You can add the following to your workflow scripts to run it:
