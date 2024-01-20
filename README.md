@@ -102,6 +102,7 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`clean`** _string[]_ - List of files to clean before each build.
 * **`deployFiles`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
 * **`deployBranch`** _string[]_ - Branch where to do the deployment (default: `gh-pages`).
+* **`deployRoot`** _string_ - Root folder to do deploy, used in combo with `deployFiles` (default: `.`).
 * **`docsCopyright`** _string_ - Copyright in the docs (defaults: package.json's `author`)
 * **`docsDescription`** _string_ - HTML meta description in docs (defaults: package.json's `description`)
 * **`docsDestination`** _string_ - Relative path to the output documentation folder (default: `docs`)
