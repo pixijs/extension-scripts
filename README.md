@@ -161,3 +161,65 @@ If you're going to run `xs test` on GitHub Actions, please keep in mind that it 
 - name: Test
   run: xvfb-run --auto-servernum npm test
 ```
+
+### Publishing on GitHub Actions
+
+Publishing on GitHub Actions requires a little customization. Typically, running `xs release` locally will also publish, however, if you want to defer publishing on GitHub Actions, you can modify the default `xs release` in your **package.json** like this:
+
+```json
+{
+  "scripts": {
+    "build": "xs build",
+    "release": "xs bump,test,deploy,git-push",
+    "publish-ci": "xs publish",
+  }
+}
+```
+
+Here's a snippet of the a GitHub Actions workflow to trigger a publish when a release is published. For more information on creating publishing workflow check out this [documentation](https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages).
+
+```yml
+name: Publish Package
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        registry-url: 'https://registry.npmjs.org'
+    - run: npm ci
+    - run: npm run build
+    - run: npm run publish-ci
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+Finally, if you need to publishing to a different [dist-tag](https://docs.npmjs.com/cli/v10/commands/npm-dist-tag) when publishing, you can use the `XS_PUBLISH_TAG` environment variable. In this example, prereleases will be published to a `beta` dist-tag.
+
+```yml
+name: Publish Package
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        registry-url: 'https://registry.npmjs.org'
+    - run: npm ci
+    - run: npm run build
+    - run: npm run publish-ci
+      if: github.event.release.prerelease
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        XS_PUBLISH_TAG: beta
+    - run: npm run publish-ci
+      if: github.event.release.prerelease == false
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
