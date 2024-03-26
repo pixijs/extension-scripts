@@ -65,6 +65,7 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 | `upload` | Upload files to gh-pages branch |
 | `version` | Output the version of `@pixi/extension-scripts` |
 | `watch` | Watch the code in development mode, updates on changes |
+| `example` | Copy `dist` folder with the files generated on build step into `examples` folder and start http-server |
 
 ### Chaining
 
