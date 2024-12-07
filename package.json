@@ -38,7 +38,7 @@
   "homepage": "https://github.com/pixijs/extension-scripts#readme",
   "dependencies": {
     "@kayahr/jest-electron-runner": "^29.3.0",
-    "@pixi/eslint-config": "github:pixijs/eslint-config#feat/elint-v9",
+    "@pixi/eslint-config": "^6.0.0",
     "@pixi/rollup-plugin-rename-node-modules": "^2.0.0",
     "@pixi/webdoc-template": "^1.5.5",
     "@rollup/plugin-commonjs": "^24.0.0",
