@@ -9,12 +9,12 @@
   },
   "exports": {
     "./tsconfig": "./lib/configs/tsconfig.json",
-    "./eslint": "./lib/configs/eslint.json",
+    "./eslint": "./lib/configs/eslint.config.mjs",
     "./jest": "./lib/configs/jest.json"
   },
   "scripts": {
     "test": "npm run lint && cd test && npm i && npm test",
-    "lint": "eslint --ext .mjs -c lib/configs/eslint.json lib --max-warnings 0",
+    "lint": "eslint -c lib/configs/eslint.config.mjs lib --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "preversion": "npm test",
     "postversion": "npm publish && git push && git push --tags"
@@ -38,7 +38,7 @@
   "homepage": "https://github.com/pixijs/extension-scripts#readme",
   "dependencies": {
     "@kayahr/jest-electron-runner": "^29.3.0",
-    "@pixi/eslint-config": "^5.1.0",
+    "@pixi/eslint-config": "^6.0.0",
     "@pixi/rollup-plugin-rename-node-modules": "^2.0.0",
     "@pixi/webdoc-template": "^1.5.5",
     "@rollup/plugin-commonjs": "^24.0.0",
@@ -49,7 +49,7 @@
     "@webdoc/cli": "^2.2.0",
     "chalk": "^5.0.0",
     "clean-package": "^2.2.0",
-    "eslint": "^8.30.0",
+    "eslint": "^9.16.0",
     "gh-pages": "^4.0.0",
     "glob": "^10.3.10",
     "http-server": "^14.1.1",
