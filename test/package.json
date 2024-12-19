@@ -13,6 +13,7 @@
     }
   },
   "scripts": {
+    "start": "xs serve",
     "build": "xs build",
     "clean": "xs clean",
     "docs": "xs docs",
@@ -24,9 +25,10 @@
     "watch": "xs watch"
   },
   "peerDependencies": {
-    "@pixi/core": "^7.3.0"
+    "pixi.js": ">=8 <9"
   },
   "devDependencies": {
-    "@pixi/extension-scripts": "file:../"
+    "@pixi/extension-scripts": "file:../",
+    "pixi.js": "^8.0.0"
   }
 }

@@ -4,11 +4,23 @@
   <title>Test</title>
 </head>
 <body>
-  <script src="https://pixijs.download/dev/pixi.min.js"></script>
-  <script src="../dist/pixi-my-system.js"></script>
-  <script>
-    const app = new PIXI.Application();
-    document.body.appendChild(app.view);
+  <script type="importmap">
+    {
+      "imports": {
+        "pixi.js": "https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.mjs",
+        "@pixi/my-system": "../dist/pixi-my-system.mjs"
+      }
+    }
+  </script>
+  <script type="module">
+    import { Application } from 'pixi.js';
+    import '@pixi/my-system';
+    const app = new Application();
+    await app.init();
+    document.body.appendChild(app.canvas);
+    setTimeout(() => {
+      app.destroy(true);
+    }, 4000);
   </script>
 </body>
 </html>

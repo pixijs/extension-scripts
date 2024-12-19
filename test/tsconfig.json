@@ -1,5 +1,3 @@
 {
-    "compilerOptions": {
-        "skipLibCheck": true
-    }
+    "extends": "@pixi/extension-scripts/tsconfig"
 }

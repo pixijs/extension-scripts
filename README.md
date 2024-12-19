@@ -87,7 +87,7 @@ Generally, the project structure is baked-in to the defaults, however, most of t
 * `./examples` - Contains any examples or demos use to test the project
 * `./lib` - Generated folder for ES2020 modules and types
 * `./src` - Contains all the source code (TypeScript files)
-* `./test` - The Jest unit-tests
+* `./src/__tests__` - The Jest unit-tests
 
 ## Configuration
 
@@ -115,13 +115,14 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`environments`** _string[]_ - Environments supports for output, only values supprted `node`, `browser` (default: `['node', 'browser']`)
 * **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
 * **`jestConfig`** _string_ - Optional path to the Jest config file (default: `null`)
-* **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'test', 'examples']`)
+* **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'examples']`)
 * **`moduleSource`** _string_ - Input for the `module` output, fallback to `source`. Supports globs. (default: `null`)
 * **`namespace`** _string_ - User-defined global namespace for the bundle.
 * **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
 * **`silent`** _boolean_ - Whether to silence the output (default: `false`)
 * **`source`** _string_ - The entry-point for building the extension (default: `src/index.ts`)
 * **`tsconfig`** _string_ - Relative path to the tsconfig file for doing type check (default: `tsconfig.json`)
+* **`tsconfigTypes`** _string_ - Relative path to the tsconfig file for outputting types, if not defined, will use `tsconfig` option (default: `null`)
 
 ### Example
 
