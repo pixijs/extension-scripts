@@ -1,17 +1,17 @@
-import { extensions, ExtensionType } from '@pixi/core';
+import { extensions, ExtensionType } from 'pixi.js';
 
-import type { ExtensionMetadata, ISystem } from '@pixi/core';
+import type { ExtensionMetadata, System } from 'pixi.js';
 
 /**
  * Renderer system extension example.
  * This doesn't do anything meaningful, but it shows how to create a system extension.
  */
-class MySystem implements ISystem
+class MySystem implements System
 {
     /** Metadata to install the extension */
     static extension: ExtensionMetadata = {
         name: 'mySystem',
-        type: ExtensionType.RendererSystem,
+        type: [ExtensionType.WebGLSystem, ExtensionType.WebGPUSystem],
     };
 
     /** Currention version can be inlined like this: */
