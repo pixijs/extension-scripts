@@ -1,3 +1,6 @@
 {
-    "extends": "@pixi/extension-scripts/tsconfig"
+    "extends": "@pixi/extension-scripts/tsconfig",
+    "compilerOptions": {
+        "types": ["vitest/globals"]
+    }
 }

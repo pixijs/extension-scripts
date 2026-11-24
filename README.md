@@ -8,7 +8,7 @@ Contains all the tools common for building extensions for PixiJS. While this too
 
 * [Consistent linting style](https://github.com/pixijs/eslint-config/) with [ESLint](https://eslint.org/)
 * Builds using [Rollup](https://rollupjs.org/guide/en/) and [ESBuild](https://esbuild.github.io/)
-* Testing using [Jest](https://jestjs.io/docs/getting-started) (with [Electron runner](https://github.com/kayahr/jest-electron-runner))
+* Testing using [Vitest](https://vitest.dev/) in a real browser (with [Playwright](https://playwright.dev/))
 * Documentation building with [webdoc](https://github.com/webdoc-labs/webdoc)
 * Deployment using [gh-pages](https://github.com/tschaub/gh-pages) on GitHub
 * Tidy package.json with [clean-package](https://www.npmjs.com/package/clean-package) while publishing.
@@ -16,7 +16,7 @@ Contains all the tools common for building extensions for PixiJS. While this too
 
 ## Getting Started
 
-Simply add these things to your **package.json**. All scripts (a.k.a., commands) are optional. This structure (`main`, `types`, `module`, `exports`) provides the best backward-compatibility with Node's new module [exports](https://nodejs.org/api/packages.html#exports).
+Node.js 22.12 or newer is required. Simply add these things to your **package.json**. All scripts (a.k.a., commands) are optional. This structure (`main`, `types`, `module`, `exports`) provides the best backward-compatibility with Node's new module [exports](https://nodejs.org/api/packages.html#exports).
 
 ```json
 {
@@ -60,8 +60,8 @@ Simply add these things to your **package.json**. All scripts (a.k.a., commands)
 | `publish` | Just like `npm publish` but invokes `clean-package` before and after |
 | `release` | Alias for `bump,test,deploy,publish,git-push` |
 | `serve` | Runs `watch` command plus also opens the `examples` folder |
-| `test` | Run the unit tests in the `test` folder. This supports additional CLI arguments to pass to Jest, for instance `xs test -- --ci` |
-| `types` | Type-check the `src` folder using TypeScript |
+| `test` | Run the unit tests (`*.test.*` and `*.spec.*` files), fails if there are none. This supports additional CLI arguments to pass to Vitest, for instance `xs test --bail=1` |
+| `types` | Type-check the `src` folder using TypeScript, and the `test` folder if it contains a **tsconfig.json** |
 | `upload` | Upload files to gh-pages branch |
 | `version` | Output the version of `@pixi/extension-scripts` |
 | `watch` | Watch the code in development mode, updates on changes |
@@ -87,7 +87,7 @@ Generally, the project structure is baked-in to the defaults, however, most of t
 * `./examples` - Contains any examples or demos use to test the project
 * `./lib` - Generated folder for ES2020 modules and types
 * `./src` - Contains all the source code (TypeScript files)
-* `./src/__tests__` - The Jest unit-tests
+* `./src/__tests__` - The Vitest unit-tests (`./test` also works)
 
 ## Configuration
 
@@ -114,13 +114,13 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
 * **`environments`** _string[]_ - Environments supports for output, only values supprted `node`, `browser` (default: `['node', 'browser']`)
 * **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
-* **`jestConfig`** _string_ - Optional path to the Jest config file (default: `null`)
 * **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'examples']`)
 * **`moduleSource`** _string_ - Input for the `module` output, fallback to `source`. Supports globs. (default: `null`)
 * **`namespace`** _string_ - User-defined global namespace for the bundle.
 * **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
 * **`silent`** _boolean_ - Whether to silence the output (default: `false`)
 * **`source`** _string_ - The entry-point for building the extension (default: `src/index.ts`)
+* **`testBrowsers`** _string[]_ - Browsers to run the tests in, only values supported `chromium`, `firefox`, `webkit` (default: `['chromium']`)
 * **`tsconfig`** _string_ - Relative path to the tsconfig file for doing type check (default: `tsconfig.json`)
 * **`tsconfigTypes`** _string_ - Relative path to the tsconfig file for outputting types, if not defined, will use `tsconfig` option (default: `null`)
 
@@ -143,24 +143,55 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 
 * **XS_PUBLISH_TAG** _string_ - The npm [`--tag`](https://docs.npmjs.com/cli/v10/commands/npm-publish#tag) value to use when running the `publish` command (default: `latest`)
 
-## GitHub Actions
+## Testing
 
-If you're going to run `xs test` on GitHub Actions, please keep in mind that it requires `xvfb` since the tests are run within Electron. You can add the following to your workflow scripts to run it:
+Tests run in headless Chromium by default, with Vitest's [globals](https://vitest.dev/config/globals) (e.g., `describe`, `it`, `expect`, `vi`) and support for importing shaders. The browser needs to be installed once, and again whenever Playwright is updated:
 
-**Before**
-
-```yml
-- name: Test
-  run: npm test
+```bash
+npx playwright install chromium
 ```
 
-**After**
+Use the `testBrowsers` option to also run the tests in Firefox or WebKit. For anything else, add a [**vitest.config.ts**](https://vitest.dev/config/) file to the project, it's used instead of the defaults from `xs`.
+
+For the types of the globals, add `"types": ["vitest/globals"]` to the `compilerOptions` of the project's **tsconfig.json**. If the tests are in the `test` folder, add a **test/tsconfig.json** instead, which also makes `xs types` type-check them:
+
+```json
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["../src/**/*", "./**/*"]
+}
+```
+
+When using a package manager which doesn't hoist dependencies (e.g., pnpm), add `vitest` to the project's `devDependencies`, `@vitest/browser-playwright` if its **vitest.config.ts** uses it, and `vite` if `types` contains `"vite/client"`. If `vitest` can't be found with npm, update the dependency which conflicts with it (e.g., `esbuild`, `vite` or `@types/node`). If the project depends on `vitest`, `vite` or `playwright` itself, the versions need to be compatible with the ones `xs` uses.
+
+### Migrating from Jest
+
+Version 5 replaces Jest and Electron with Vitest:
+
+* Install the browser with `npx playwright install chromium`, and use Node.js 22.12 or newer.
+* Replace `jest` with `vi` (e.g., `jest.fn()` with `vi.fn()`) and imports from `@jest/globals` with `vitest`. Matchers from `jest-extended` are no longer included.
+* Tests run in a browser, they can't use `require` or Node.js modules such as `fs` and `http`. Import assets instead (e.g., `import url from './image.png?url'`, with `"vite/client"` added to `types`).
+* Tests which need Node.js can use `environment: 'node'` in a **vitest.config.ts**.
+* All `*.test.*` and `*.spec.*` files are run, not only the ones in `__tests__`.
+* `xs test` fails if there are no tests. If the project doesn't have any, remove the `test` script and replace `xs release` with `xs bump,deploy,publish,git-push`.
+* Replace the `jestConfig` option with a **vitest.config.ts**.
+* Add `@vitest/coverage-v8` to the `devDependencies` to use `xs test --coverage`.
+* Remove `xvfb` from GitHub Actions if nothing else needs it, and install the browser (see below).
+* Class fields in the output are assigned instead of defined, regardless of the version of esbuild.
+
+## GitHub Actions
+
+If you're going to run `xs test` on GitHub Actions, the browser needs to be installed first:
 
 ```yml
-- name: Test Dependencies
-  run: sudo apt-get install xvfb
+- name: Install Browser
+  run: npx playwright install --with-deps chromium
 - name: Test
-  run: xvfb-run --auto-servernum npm test
+  run: npm test
 ```
 
 ### Publishing on GitHub Actions
@@ -189,7 +220,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '24.x'
         registry-url: 'https://registry.npmjs.org'
     - run: npm ci
     - run: npm run build
@@ -210,7 +241,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '24.x'
         registry-url: 'https://registry.npmjs.org'
     - run: npm ci
     - run: npm run build

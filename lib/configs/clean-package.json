@@ -5,7 +5,6 @@
         "engines",
         "devDependencies",
         "extensionConfig",
-        "eslintConfig",
-        "jest"
+        "eslintConfig"
     ]
 }
