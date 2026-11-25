@@ -44,6 +44,15 @@ Node.js 22.12 or newer is required. Simply add these things to your **package.js
 }
 ```
 
+A **tsconfig.json** is also required:
+
+```json
+{
+  "extends": "@pixi/extension-scripts/tsconfig",
+  "include": ["src/**/*"]
+}
+```
+
 ### Commands
 
 | Command | Description |
@@ -153,7 +162,7 @@ npx playwright install chromium
 
 Use the `testBrowsers` option to also run the tests in Firefox or WebKit. For anything else, add a [**vitest.config.ts**](https://vitest.dev/config/) file to the project, it's used instead of the defaults from `xs`.
 
-For the types of the globals, add `"types": ["vitest/globals"]` to the `compilerOptions` of the project's **tsconfig.json**. If the tests are in the `test` folder, add a **test/tsconfig.json** instead, which also makes `xs types` type-check them:
+For the types of the globals, add `"types": ["vitest/globals"]` to the `compilerOptions` of the project's **tsconfig.json**. If the tests are in the `test` folder, add a **test/tsconfig.json** instead, which also makes `xs types` type-check them (the project's **tsconfig.json** should only include `src`):
 
 ```json
 {
@@ -204,7 +213,7 @@ Publishing on GitHub Actions requires a little customization. Typically, running
   "scripts": {
     "build": "xs build",
     "release": "xs bump,test,deploy,git-push",
-    "publish-ci": "xs publish",
+    "publish-ci": "xs publish"
   }
 }
 ```
@@ -218,16 +227,18 @@ on:
     types: [published]
 jobs:
   publish:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24.x'
-        registry-url: 'https://registry.npmjs.org'
-    - run: npm ci
-    - run: npm run build
-    - run: npm run publish-ci
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run publish-ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
 Finally, if you need to publishing to a different [dist-tag](https://docs.npmjs.com/cli/v10/commands/npm-dist-tag) when publishing, you can use the `XS_PUBLISH_TAG` environment variable. In this example, prereleases will be published to a `beta` dist-tag.
@@ -239,20 +250,22 @@ on:
     types: [published]
 jobs:
   publish:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24.x'
-        registry-url: 'https://registry.npmjs.org'
-    - run: npm ci
-    - run: npm run build
-    - run: npm run publish-ci
-      if: github.event.release.prerelease
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        XS_PUBLISH_TAG: beta
-    - run: npm run publish-ci
-      if: github.event.release.prerelease == false
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run publish-ci
+        if: github.event.release.prerelease
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          XS_PUBLISH_TAG: beta
+      - run: npm run publish-ci
+        if: github.event.release.prerelease == false
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
