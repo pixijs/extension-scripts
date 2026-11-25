@@ -170,18 +170,19 @@ When using a package manager which doesn't hoist dependencies (e.g., pnpm), add 
 
 ### Migrating from Jest
 
-Version 5 replaces Jest and Electron with Vitest:
+Version 5 replaces Jest and Electron with Vitest. Projects older than version 3 also need to move to ESLint 9, and projects older than version 4 get stricter TypeScript defaults (e.g., `strictNullChecks`, `noUnusedLocals`):
 
 * Install the browser with `npx playwright install chromium`, and use Node.js 22.12 or newer.
 * Replace `jest` with `vi` (e.g., `jest.fn()` with `vi.fn()`) and imports from `@jest/globals` with `vitest`. Matchers from `jest-extended` are no longer included.
 * Tests run in a browser, they can't use `require` or Node.js modules such as `fs` and `http`. Import assets instead (e.g., `import url from './image.png?url'`, with `"vite/client"` added to `types`).
 * Tests which need Node.js can use `environment: 'node'` in a **vitest.config.ts**.
 * All `*.test.*` and `*.spec.*` files are run, not only the ones in `__tests__`.
+* Tests which import the built files (e.g., `lib`) need `xs build` to be run first.
 * `xs test` fails if there are no tests. If the project doesn't have any, remove the `test` script and replace `xs release` with `xs bump,deploy,publish,git-push`.
 * Replace the `jestConfig` option with a **vitest.config.ts**.
 * Add `@vitest/coverage-v8` to the `devDependencies` to use `xs test --coverage`.
 * Remove `xvfb` from GitHub Actions if nothing else needs it, and install the browser (see below).
-* Class fields in the output are assigned instead of defined, regardless of the version of esbuild.
+* Class fields in the output are assigned instead of defined, regardless of the version of esbuild. The published files change if they were built with esbuild 0.18 or newer.
 
 ## GitHub Actions
 
