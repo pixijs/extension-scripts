@@ -55,7 +55,7 @@ Node.js 22.12 or newer is required. Simply add these things to your **package.js
 | `deploy` | Alias for `build,docs,upload` |
 | `docs` | Build the `src` folder into `docs` folder using webdoc |
 | `git-push` | Does `git push` and `git push --tags` |
-| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `xs lint -- --fix` |
+| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `xs lint --fix` |
 | `pack` | Like `npm pack` but will use [clean-package](https://www.npmjs.com/package/clean-package) |
 | `publish` | Just like `npm publish` but invokes `clean-package` before and after |
 | `release` | Alias for `bump,test,deploy,publish,git-push` |
