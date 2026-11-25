@@ -176,7 +176,7 @@ Version 5 replaces Jest and Electron with Vitest. Projects older than version 3 
 * Replace `jest` with `vi` (e.g., `jest.fn()` with `vi.fn()`) and imports from `@jest/globals` with `vitest`. Matchers from `jest-extended` are no longer included.
 * Tests run in a browser, they can't use `require` or Node.js modules such as `fs` and `http`. Import assets instead (e.g., `import url from './image.png?url'`, with `"vite/client"` added to `types`).
 * Tests which need Node.js can use `environment: 'node'` in a **vitest.config.ts**.
-* All `*.test.*` and `*.spec.*` files are run, not only the ones in `__tests__`.
+* All `*.test.*` and `*.spec.*` files outside of `dist` and `lib` are run, not only the ones in `__tests__`.
 * Tests which import the built files (e.g., `lib`) need `xs build` to be run first.
 * `xs test` fails if there are no tests. If the project doesn't have any, remove the `test` script and replace `xs release` with `xs bump,deploy,publish,git-push`.
 * Replace the `jestConfig` option with a **vitest.config.ts**.
