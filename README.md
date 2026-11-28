@@ -64,7 +64,7 @@ A **tsconfig.json** is also required:
 | `deploy` | Alias for `build,docs,upload` |
 | `docs` | Build the `src` folder into `docs` folder using webdoc |
 | `git-push` | Does `git push` and `git push --tags` |
-| `lint` | Using ESLint to lint the `src` folder. This supports additional CLI arguments to pass to ESLint, for instance `xs lint --fix` |
+| `lint` | Using ESLint to lint the `src` and `examples` folders. This supports additional CLI arguments to pass to ESLint, for instance `xs lint --fix` |
 | `pack` | Like `npm pack` but will use [clean-package](https://www.npmjs.com/package/clean-package) |
 | `publish` | Just like `npm publish` but invokes `clean-package` before and after |
 | `release` | Alias for `bump,test,deploy,publish,git-push` |
@@ -109,21 +109,21 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 * **`bundleModuleSource`** _string_ - Input for the `bundleModule`, fallback to `source` (default: `null`)
 * **`bundleModuleExports`** _string_ - Output [exports](https://rollupjs.org/guide/en/#outputexports) for `bundleModule` (default: `named`)
 * **`clean`** _string[]_ - List of files to clean before each build.
-* **`deployFiles`** _string[]_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
-* **`deployBranch`** _string[]_ - Branch where to do the deployment (default: `gh-pages`).
+* **`deployFiles`** _string_ - Glob pattern for files to deploy (default: `{dist,examples,docs}/**`).
+* **`deployBranch`** _string_ - Branch where to do the deployment (default: `gh-pages`).
 * **`deployRoot`** _string_ - Root folder to do deploy, used in combo with `deployFiles` (default: `.`).
 * **`docsCopyright`** _string_ - Copyright in the docs (defaults: package.json's `author`)
 * **`docsDescription`** _string_ - HTML meta description in docs (defaults: package.json's `description`)
 * **`docsDestination`** _string_ - Relative path to the output documentation folder (default: `docs`)
-* **`docsGoogleAnalytics`** _string_ - Optional `UA-*` identifier for reporting to Google Analytics.
+* **`docsGoogleAnalytics`** _string_ - Optional `UA-*` identifier for reporting to Google Analytics. Google no longer accepts these, and the newer `G-*` identifiers aren't supported.
 * **`docsIndex`** _string_ - Relative path to markdown file to use as the index page for documentation (default: `README.md`)
 * **`docsKeywords`** _string_ - HTML meta keywords in docs (defaults: package.json's `keywords`)
 * **`docsName`** _string_ - Application name in docs  (defaults: package.json's `name`)
 * **`docsRepository`** _string_ - URL for repository (defaults: package.json's `repository.url`)
 * **`docsTitle`** _string_ - HTML base title in docs (defaults: package.json's `name`)
-* **`environments`** _string[]_ - Environments supports for output, only values supprted `node`, `browser` (default: `['node', 'browser']`)
-* **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. All defaults are provide for the core package of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
-* **`lint`** _string[]_ - List of additional folders or files to lint. (default: `['src', 'examples']`)
+* **`environments`** _string[]_ - What to build: `node` for the `lib` folder, `browser` for the `bundle` file. The `bundleModule` file is always built. (default: `['node', 'browser']`)
+* **`globals`** _object_ - [Output globals](https://rollupjs.org/guide/en/#outputglobals) as defined by Rollup. This is used for creating the browser bundle. Defaults are provided for the core packages of PixiJS (e.g., `@pixi/core`, `@pixi/sprite`, etc).
+* **`lint`** _string[]_ - List of folders or files to lint. (default: `['src', 'examples']`)
 * **`moduleSource`** _string_ - Input for the `module` output, fallback to `source`. Supports globs. (default: `null`)
 * **`namespace`** _string_ - User-defined global namespace for the bundle.
 * **`serve`** _string_ - Relative path to the serve folder (default: `examples`).
@@ -151,6 +151,23 @@ Configuration can be provided using the `extensionConfig` field in **package.jso
 ## Environment Variables
 
 * **XS_PUBLISH_TAG** _string_ - The npm [`--tag`](https://docs.npmjs.com/cli/v10/commands/npm-publish#tag) value to use when running the `publish` command (default: `latest`)
+
+## Linting
+
+To change the lint rules, add an **eslint.config.mjs** (or **eslint.config.js**) file to the project, it's used instead of the defaults from `xs`. It can start from the defaults:
+
+```js
+import config from '@pixi/extension-scripts/eslint';
+
+export default [
+    ...config,
+    {
+        rules: {
+            'no-console': 'off',
+        },
+    },
+];
+```
 
 ## Testing
 
@@ -218,42 +235,46 @@ Publishing on GitHub Actions requires a little customization. Typically, running
 }
 ```
 
-Here's a snippet of the a GitHub Actions workflow to trigger a publish when a release is published. For more information on creating publishing workflow check out this [documentation](https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages).
+Here's a GitHub Actions workflow to publish to npm when a release is published on GitHub. It uses npm's [trusted publishing](https://docs.npmjs.com/trusted-publishers/), so no npm token is needed. Set it up once in the package's settings on npmjs.com: enter the name of the workflow file (e.g., `publish.yml`) and allow `npm publish`. npm is removing publishing with an access token in January 2027.
 
 ```yml
 name: Publish Package
 on:
   release:
     types: [published]
+permissions:
+  id-token: write
+  contents: read
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
       - run: npm run publish-ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-Finally, if you need to publishing to a different [dist-tag](https://docs.npmjs.com/cli/v10/commands/npm-dist-tag) when publishing, you can use the `XS_PUBLISH_TAG` environment variable. In this example, prereleases will be published to a `beta` dist-tag.
+Finally, if you need to publish to a different [dist-tag](https://docs.npmjs.com/cli/v10/commands/npm-dist-tag) when publishing, you can use the `XS_PUBLISH_TAG` environment variable. In this example, prereleases will be published to a `beta` dist-tag.
 
 ```yml
 name: Publish Package
 on:
   release:
     types: [published]
+permissions:
+  id-token: write
+  contents: read
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
@@ -262,10 +283,7 @@ jobs:
       - run: npm run publish-ci
         if: github.event.release.prerelease
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           XS_PUBLISH_TAG: beta
       - run: npm run publish-ci
         if: github.event.release.prerelease == false
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
